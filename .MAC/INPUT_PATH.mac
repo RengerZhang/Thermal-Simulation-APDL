@@ -1,0 +1,23 @@
+/INPUT,KXX,TXT,'D:\BaiduSyncdisk\ThermalSimulation\TBSimu 1.0\APDL\SUB'
+/INPUT,TO_10.0_WD_0.1_0.1_KXX_47,TXT,'D:\BaiduSyncdisk\ThermalSimulation\TBSimu 1.0\APDL\SUB\TEMP'
+TO_10.0_WD_0.1_0.1_KXX_47.txt
+/INPUT,KXX2,TXT,'D:\BaiduSyncdisk\ThermalSimulation\TBSimu 1.0\APDL\SUB'
+/INPUT,CFTEST,MAC,'D:\BaiduSyncdisk\ThermalSimulation\TBSimu 1.0\APDL\SUB'
+
+/INPUT,KXX,TXT,'D:\BaiduSyncdisk\ThermalSimulation\TBSimu 1.0\APDL\SUB'
+/INPUT,KQ_CAL,MAC,'D:\BaiduSyncdisk\ThermalSimulation\TBSimu 1.0\APDL\SUB'
+/INPUT,PHI_CAL,MAC,'D:\BaiduSyncdisk\ThermalSimulation\TBSimu 1.0\APDL\SUB'
+
+/INPUT,K_EQ_OTP,TXT,'D:\BaiduSyncdisk\ThermalSimulation\TBSimu 1.0\APDL\SUB'
+/INPUT,FACT_OTP,MAC,'D:\BaiduSyncdisk\ThermalSimulation\TBSimu 1.0\APDL\SUB'
+
+LGWRITE,'01','lgw','D:\BaiduSyncdisk\ThermalSimulation\TBSimu 1.0\Log',COMMENT 
+
+python main.py A -t 10 -k 47 -th .1 -w .1
+
+/INPUT,BATCH,TXT,'D:\BaiduSyncdisk\ThermalSimulation\TBSimu 1.0\1D\SUB'
+/INPUT,TIME_POST_OPT,MAC,'D:\BaiduSyncdisk\ThermalSimulation\TBSimu 1.0\1D\SUB'
+D:\BaiduSyncdisk\ThermalSimulation\TBSimu 1.0\1D\OUTPUT\TIME_TF_TEMP.txt
+
+
+/INPUT,KXX4,MAC,'D:\BaiduSyncdisk\ThermalSimulation\TBSimu 1.0\APDL\SUB'
