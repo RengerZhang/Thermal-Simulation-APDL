@@ -182,4 +182,9 @@
     ASEL,ALL
     SBCTRAN
 
-/IMAGE,SAVE,'TEST01',PNG,'C:\Users\24880\Desktop\Thermal-Simulation-APDL\.PNG'
+/SHOW
+/REPLOT
+/IMAGE,SAVE,TEST01,JPEG,'C:\Users\24880\Desktop\Thermal-Simulation-APDL\.PNG'
+/SHOW,CLOSE
+/IMAGE,SAVE,'C:\Users\24880\Desktop\Thermal-Simulation-APDL\.PNG\TEST02',PNG
+
