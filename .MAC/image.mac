@@ -1,0 +1,185 @@
+/CWD,'C:\Users\24880\Desktop\Thermal-Simulation-APDL\workpath'
+/UIS,MSGPOP,1
+/FILNAME,ThermalBridge,0
+/GRA,POWER  
+    /GST,ON 
+    /PLO,INFO,3 
+    /GRO,CURL,ON
+    /CPLANE,1   
+    ! /REPLOT,RESIZE  
+    WPSTYLE,,,,,,,,0
+    /VIEW,1,1,1,1  
+    ! /REPLOT
+
+! 初始参数赋值
+    ! 试块高度和宽度
+    H1=1
+    W1=1
+    ! 主体厚度
+    D1=0.15
+    ! 保温层厚度
+    D2=0.06
+    ! 试块总厚度
+    D3=D1+D2
+    ! 热桥构件高*宽*厚度
+    TBH=0.1
+    TBW=0.1
+    TBD=0.15
+    ! 热桥构件与内表面距离
+    D0=0.01
+    ! 工作平面偏移距离
+    D10=D1-D3+D0+TBD
+    ! 切割面偏移距离
+    D11=(W1-TBW)/2
+    D12=(H1-TBH)/2
+    ! 内外边界参数
+    TO=18
+    TE=0
+    SF_E=23
+    SF_I=8
+    T_DELT=ABS(TO-TE)
+    !全局网格尺寸ESIZE
+    ESZ=0.02
+    ! 各材料热导率参数
+    K1 = .034
+    K2 = 47.0000
+    K3 = 2.2
+
+    RHO_EPS = 20
+    RHO_BOX = 7850
+    RHO_WALL = 2400
+
+    CC_EPS = 1450
+    CC_BOX = 450
+    CC_WALL = 1000
+
+    T_LIM = T_DELT/250
+    ! T_LIM = 0.005
+/PREP7
+! 材料属性定义
+    ! Thermal conductivities 导热系数
+    MP,KXX,1,K1
+    MP,KXX,2,K2
+    MP,KXX,3,K3
+    ! Specific heat 比热
+    MP,C,1,CC_EPS
+    MP,C,2,CC_BOX
+    MP,C,3,CC_WALL
+    ! Mass density 质量密度
+    MP,DENS,1,RHO_EPS
+    MP,DENS,2,RHO_BOX
+    MP,DENS,3,RHO_WALL
+
+! 几何模型建立
+    ! 绘制墙体（1）
+    BLC4,0,0,H1,W1,D1
+
+    ! 绘制保温层（2）
+    WPOFFS,0,0,D1
+    BLC4,0,0,H1,W1,D2
+
+    ! 绘制热桥构件（3）
+    WPOFFS,0,0,-D10
+    BLC4,D11,D12,TBW,TBH,TBD
+    VGEN,3,3
+    WPAVE
+
+    ! 布尔操作去除重复部分
+    VSBV,1,4
+    VSBV,2,5
+
+    ! 重新标号压缩编号
+    VPTN,ALL
+    NUMCMP,ALL 
+
+    ! 绘制切割面
+    AGEN,2,6
+    AGEN,2,19
+    AADD,22,23
+    AGEN,,24,,,,-D12,,,,1
+    AGEN,2,24,,,,-TBH
+
+    ! 切割面22，24
+    AGEN,2,8
+    AGEN,2,20
+    AADD,23,25
+    AGEN,,26,,,-D11,,,,,1
+    AGEN,2,26,,,-TBW
+
+    ! 切割面打组
+    ASEL,,,,22,24
+    ASEL,A,,,26
+    CM,DIVA,AREA
+    VSBA,ALL,DIVA
+
+    ! 切割为标准几何体
+    VPTN,ALL
+    NUMCMP,ALL
+
+    ! EPS:3,4,5,6,7,12,14,15,16
+    VSEL,S,,,3,7
+    VSEL,A,,,12,16,2
+    VSEL,A,,,15
+    CM,EPS,VOLU
+    VATT,1
+
+    ! WALL:2,8,9,10,11,13,17,18,19
+    VSEL,S,,,8,11
+    VSEL,A,,,17,19
+    VSEL,A,,,2
+    VSEL,A,,,13
+    CM,WALL,VOLU
+    VATT,3
+
+    VSEL,S,,,1
+    CM,BOX,VOLU
+    VATT,2
+
+
+! 网格划分阶段
+    ! GLOBAL TEMP AND TEMPOFFSET
+    TUNIF,0
+    TOFFST,273
+
+    ! MESHING EPS
+    ET,1,SOLID90
+    TYPE,1
+    ESIZE,0.01
+    MAT,1
+    MSHKEY,1
+    MSHAPE,2,3D
+    CMSEL,,EPS
+    VSWEEP,ALL
+
+    ! MESHING BOX
+    ET,1,SOLID90
+    TYPE,1
+    ESIZE,ESZ
+    MAT,2
+    MSHKEY,1
+    MSHAPE,2,3D
+    CMSEL,,BOX
+    VSWEEP,ALL
+
+    ! MESHING WALL
+    ET,1,SOLID90
+    TYPE,1
+    ESIZE,ESZ
+    MAT,3
+    MSHKEY,1
+    MSHAPE,2,3D
+    CMSEL,,WALL
+    VSWEEP,ALL
+
+    ! LOADS APPLY
+    ASEL,S,LOC,Z,D3
+    CM,INT,AREA
+    SFA,ALL,1,CONV,SF_E,TE
+    ASEL,S,LOC,Z,0
+    CM,EXT,AREA
+    SFA,ALL,1,CONV,SF_I,TO
+    CMSEL,ALL
+    ASEL,ALL
+    SBCTRAN
+
+/IMAGE,SAVE,'TEST01',PNG,'C:\Users\24880\Desktop\Thermal-Simulation-APDL\.PNG'
