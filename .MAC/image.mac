@@ -182,9 +182,31 @@
     ASEL,ALL
     SBCTRAN
 
-/SHOW
-/REPLOT
-/IMAGE,SAVE,TEST01,JPEG,'C:\Users\24880\Desktop\Thermal-Simulation-APDL\.PNG'
-/SHOW,CLOSE
-/IMAGE,SAVE,'C:\Users\24880\Desktop\Thermal-Simulation-APDL\.PNG\TEST02',PNG
+FINISH
+/FILE,TEST
+/PREP7
 
+/SHOW,PNG
+/REPLOT
+LPLOT
+/SHOW,CLOSE
+
+! /SYS,cmd /c copy "TEST000.png" "C:\Users\24880\Desktop\Thermal-Simulation-APDL\.PNG\"
+
+*DIM tgt,CHAR,260
+*DIM newname,CHAR,128
+tgt = C:\Users\24880\Desktop\Thermal-Simulation-APDL\.PNG\
+newname = ThermalBridge_TEST000.png
+
+! 3) 构造“创建目标目录”的整条命令
+*DIM,cmd,CHAR,639
+cmd = cmd /c if not exist +tgt+ mkdir +tgt+
+/SYS,%cmd%          ! 这里 MAPDL 先把 %cmd% 展开成一整串，再原样交给 OS
+
+! 4) 构造“剪切并改名”的整条命令
+cmd = cmd /c move /Y "TEST000.png" +tgt + newname
+/SYS,%cmd%
+
+
+! /SYS,cmd /c if not exist "tgt" mkdir "tgt"
+! /SYS,cmd /c move /Y "TEST000.png" "%tgt%%newname%"
